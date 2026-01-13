@@ -8,6 +8,7 @@ import torchvision.transforms as T
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
+from sys import argv
 from features import SingleImage
 from network import MuyGP, NN
 from torch.utils.data import DataLoader
@@ -79,33 +80,32 @@ def denoiseImage(img):
         plt.tight_layout()
         plt.show()
         plt.imsave("/home/ewbell/denoise.png", upscale)
-        
+        '''
         plt.imshow(var)
         plt.colorbar()
         plt.show()
-
+        '''
+        
 if __name__ == "__main__":
-
+    
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     transform = T.Compose([
         T.ToTensor(),
         T.Normalize((0.5,), (0.5,))
     ])
-    #imageset = torchvision.datasets.MNIST(root="./data", train=True, download=True, transform=transform)
-    #imageset = torchvision.datasets.FashionMNIST(root="./data", train=True, download=True, transform=transform)
-    #imageset = torchvision.datasets.SVHN(root="./data", split="train", download=True, transform=transform)
-    
-    '''
-    for image, label in imageset:
+    if len(argv) < 2: 
+        imageset = torchvision.datasets.MNIST(root="./data", train=True, download=True, transform=transform)
+        #imageset = torchvision.datasets.FashionMNIST(root="./data", train=True, download=True, transform=transform)
+        #imageset = torchvision.datasets.SVHN(root="./data", split="train", download=True, transform=transform)
+        
+        for image, label in imageset:
+            img = SingleImage(image)
+            denoiseImage(img)
+    else:
+        image = Image.open(argv[1]).convert('RGB')
+        image = transform(image)
         img = SingleImage(image)
         denoiseImage(img)
-    '''
-    
-    from sys import argv
-    image = Image.open(argv[1]).convert('RGB')
-    image = transform(image)
-    print(image.size())
-    img = SingleImage(image)
-    denoiseImage(img)
     
