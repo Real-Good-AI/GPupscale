@@ -1,4 +1,4 @@
 # GPupscale
 Image upscaling using MuyGPs.
 
-![REAL Rating](REAL.png)
+<img src="REAL.png" width="100" />
